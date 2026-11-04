@@ -2,38 +2,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-interface Produto {
-  id: number
-  nome: string
-  preco: number
-  custo: number
-}
-
-const produtos = ref<Produto[]>([])
+const produtos = ref<any[]>([])
 const nome = ref('')
 const preco = ref(0)
 const custo = ref(0)
-
-function carregarProdutos() {
-  const dados = localStorage.getItem('produtos')
-
-  if (dados) {
-    produtos.value = JSON.parse(dados)
-  } else {
-    produtos.value = [
-      { id: 1, nome: 'Cupcake', preco: 8, custo: 4.5 }
-    ]
-    salvar()
-  }
-}
 
 function salvar() {
   localStorage.setItem('produtos', JSON.stringify(produtos.value))
 }
 
-function cadastrarProduto() {
+function cadastrar() {
   if (!nome.value.trim() || preco.value <= 0 || custo.value < 0) {
-    alert('Preencha os dados corretamente!')
+    alert('Preencha os campos corretamente!')
     return
   }
 
@@ -45,118 +25,90 @@ function cadastrarProduto() {
   })
 
   salvar()
-
   nome.value = ''
   preco.value = 0
   custo.value = 0
 }
 
-function excluirProduto(id: number) {
-  if (confirm('Deseja excluir este produto?')) {
-    produtos.value = produtos.value.filter(p => p.id !== id)
-    salvar()
-  }
+function excluir(id: number) {
+  produtos.value = produtos.value.filter(p => p.id !== id)
+  salvar()
 }
 
-onMounted(carregarProdutos)
+onMounted(() => {
+  produtos.value = JSON.parse(localStorage.getItem('produtos') || '[]')
+
+  if (produtos.value.length === 0) {
+    produtos.value.push({
+      id: 1,
+      nome: 'Cupcake',
+      preco: 8,
+      custo: 4.5
+    })
+    salvar()
+  }
+})
 </script>
 
 <template>
   <div class="pagina">
     <h1>Produtos</h1>
-    <p class="subtitulo">Gerencie os produtos da sua loja.</p>
+    <p>Cadastre os doces da loja.</p>
 
-    <div class="formulario">
-      <h2>Cadastrar novo produto</h2>
+    <form @submit.prevent="cadastrar">
+      <input v-model="nome" placeholder="Nome do produto" required />
+      <input v-model.number="preco" type="number" step="0.01" min="0.01" placeholder="Preço de venda" required />
+      <input v-model.number="custo" type="number" step="0.01" min="0" placeholder="Custo de produção" required />
+      <button>Cadastrar produto</button>
+    </form>
 
-      <form @submit.prevent="cadastrarProduto">
-        <div class="campos">
-          <div>
-            <label>Nome do produto</label>
-            <input v-model="nome" placeholder="Ex: Brigadeiro" required />
-          </div>
-
-          <div>
-            <label>Preço de venda (R$)</label>
-            <input v-model.number="preco" type="number" min="0.01" step="0.01" required />
-          </div>
-
-          <div>
-            <label>Custo de produção (R$)</label>
-            <input v-model.number="custo" type="number" min="0" step="0.01" required />
-          </div>
-        </div>
-
-        <button type="submit">+ Cadastrar produto</button>
-      </form>
-    </div>
-
-    <div class="tabela">
+    <div class="lista">
       <h2>Produtos cadastrados</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Venda</th>
-            <th>Custo</th>
-            <th>Lucro unitário</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
+      <div v-for="p in produtos" :key="p.id" class="item">
+        <div>
+          <strong>{{ p.nome }}</strong>
+          <p>Venda: R$ {{ p.preco.toFixed(2) }} | Custo: R$ {{ p.custo.toFixed(2) }}</p>
+        </div>
 
-        <tbody>
-          <tr v-for="produto in produtos" :key="produto.id">
-            <td>{{ produto.nome }}</td>
-            <td>R$ {{ produto.preco.toFixed(2) }}</td>
-            <td>R$ {{ produto.custo.toFixed(2) }}</td>
-            <td>R$ {{ (produto.preco - produto.custo).toFixed(2) }}</td>
-            <td>
-              <button class="excluir" @click="excluirProduto(produto.id)">Excluir</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <button class="excluir" @click="excluir(p.id)">Excluir</button>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.pagina { width: 100%; }
-h1 { font-size: 26px; }
-.subtitulo { color: #888; margin: 8px 0 25px; }
-.formulario, .tabela {
+.pagina { padding: 30px; }
+.pagina > p { color: #888; margin: 10px 0 25px; }
+form, .lista {
   background: white;
-  padding: 25px;
+  padding: 22px;
   border-radius: 12px;
-  border: 1px solid #eeeaf2;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
-h2 { font-size: 18px; margin-bottom: 20px; }
-.campos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-label { display: block; font-size: 13px; margin-bottom: 8px; }
 input {
+  display: block;
   width: 100%;
   padding: 12px;
+  margin-bottom: 12px;
   border: 1px solid #ddd;
   border-radius: 7px;
 }
 button {
-  margin-top: 18px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 7px;
   background: #7655a5;
   color: white;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 7px;
   cursor: pointer;
 }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 14px 10px; text-align: left; border-bottom: 1px solid #eee; }
-th { color: #777; font-size: 13px; }
-.excluir { background: #dc5555; margin: 0; }
-@media(max-width: 750px) {
-  .campos { grid-template-columns: 1fr; }
-  .tabela { overflow-x: auto; }
-  table { min-width: 600px; }
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
 }
+.item p { color: #888; font-size: 13px; margin-top: 6px; }
+.excluir { background: #d9534f; }
 </style>

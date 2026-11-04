@@ -8,87 +8,67 @@ const router = useRouter()
 const nome = ref('')
 const email = ref('')
 const senha = ref('')
-const confirmarSenha = ref('')
 
 function cadastrar() {
-  if (!nome.value.trim() || !email.value.trim() || !senha.value) {
-    alert('Preencha todos os campos!')
+  if (!nome.value.trim() || !email.value.trim() || senha.value.length < 6) {
+    alert('Preencha os campos corretamente. A senha deve ter 6 caracteres ou mais.')
     return
   }
 
-  if (senha.value.length < 6) {
-    alert('A senha precisa ter pelo menos 6 caracteres!')
-    return
-  }
-
-  if (senha.value !== confirmarSenha.value) {
-    alert('As senhas não coincidem!')
-    return
-  }
-
-  // Demonstração de cadastro: não armazene senhas em texto puro.
-  alert('Cadastro validado! A autenticação será conectada ao backend.')
+  alert('Cadastro validado com sucesso!')
   router.push('/login')
 }
 </script>
 
 <template>
   <div class="cadastro">
-    <div class="caixa">
-      <div class="icone">🍬</div>
+    <form @submit.prevent="cadastrar">
+      <h1>🍬 Criar conta</h1>
+      <p>Cadastre-se no Doce Gestão.</p>
 
-      <h1>Criar conta</h1>
-      <p>Cadastre-se para acessar o Doce Gestão.</p>
+      <input v-model="nome" placeholder="Nome completo" required />
+      <input v-model="email" type="email" placeholder="E-mail" required />
+      <input v-model="senha" type="password" placeholder="Senha (mínimo 6 caracteres)" required />
 
-      <form @submit.prevent="cadastrar">
-        <label>Nome completo</label>
-        <input v-model="nome" type="text" placeholder="Digite seu nome" required />
+      <button>Cadastrar</button>
 
-        <label>E-mail</label>
-        <input v-model="email" type="email" placeholder="Digite seu e-mail" required />
-
-        <label>Senha</label>
-        <input v-model="senha" type="password" placeholder="Crie uma senha" required />
-
-        <label>Confirmar senha</label>
-        <input v-model="confirmarSenha" type="password" placeholder="Repita sua senha" required />
-
-        <button type="submit">Cadastrar</button>
-      </form>
-
-      <p class="login">
-        Já possui uma conta?
-        <RouterLink to="/login">Entrar</RouterLink>
-      </p>
-    </div>
+      <RouterLink to="/login">Já tenho uma conta</RouterLink>
+    </form>
   </div>
 </template>
 
 <style scoped>
 .cadastro {
-  min-height: 85vh; display: flex; justify-content: center;
-  align-items: center; padding: 20px;
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
 }
-.caixa {
-  background: white; width: 100%; max-width: 440px;
-  padding: 35px; border-radius: 15px;
-  border: 1px solid #eeeaf2;
-  box-shadow: 0 5px 25px rgba(0,0,0,.04);
+form {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
 }
-.icone { font-size: 38px; text-align: center; }
-h1 { text-align: center; margin: 15px 0 8px; }
-.caixa > p { text-align: center; color: #888; margin-bottom: 25px; }
-label { display: block; font-size: 13px; margin: 15px 0 7px; }
+p { color: #888; margin: 12px 0 20px; }
 input {
-  width: 100%; padding: 13px; border: 1px solid #ddd;
-  border-radius: 7px; outline: none;
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
 }
-input:focus { border-color: #7655a5; }
 button {
-  width: 100%; padding: 14px; margin-top: 24px;
-  background: #7655a5; color: white; border: none;
-  border-radius: 7px; cursor: pointer;
+  width: 100%;
+  padding: 13px;
+  background: #7655a5;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-bottom: 18px;
 }
-.caixa .login { margin: 22px 0 0; font-size: 13px; }
-.login a { color: #7655a5; font-weight: bold; text-decoration: none; }
+a { color: #7655a5; text-decoration: none; }
 </style>
