@@ -7,63 +7,28 @@ import Login from './components/login.vue';
 </template>
 
 
+
 <template>
   <div class="layout">
     <aside class="sidebar">
-      <div class="logo">
-        <span class="logo-icon">🍬</span>
-        <h2>Doce Gestão</h2>
-      </div>
-
-      <p class="menu-title">MENU PRINCIPAL</p>
+      <h2>🍬 Doce Gestão</h2>
 
       <nav>
-        <RouterLink to="/" class="menu-item">
-          <span>📊</span> Dashboard
-        </RouterLink>
-
-        <RouterLink to="/produtos" class="menu-item">
-          <span>🧁</span> Produtos
-        </RouterLink>
-
-        <RouterLink to="/vendas" class="menu-item">
-          <span>🛒</span> Vendas
-        </RouterLink>
-
-        <RouterLink to="/despesas" class="menu-item">
-          <span>💰</span> Despesas
-        </RouterLink>
-
-        <RouterLink to="/relatorios" class="menu-item">
-          <span>📈</span> Relatórios
-        </RouterLink>
+        <RouterLink to="/">Dashboard</RouterLink>
+        <RouterLink to="/produtos">Produtos</RouterLink>
+        <RouterLink to="/vendas">Vendas</RouterLink>
+        <RouterLink to="/despesas">Despesas</RouterLink>
+        <RouterLink to="/relatorios">Relatórios</RouterLink>
       </nav>
-
-      <div class="sidebar-footer">
-        <p>Doce Gestão</p>
-        <small>Controle financeiro</small>
-      </div>
     </aside>
 
-    <main class="main-content">
-      <header class="topbar">
-        <div>
-          <h3>Painel Administrativo</h3>
-          <p>Gerencie sua loja de doces</p>
-        </div>
-
-        <div class="user">
-          <span>👩🏻</span>
-          <div>
-            <strong>Maria</strong>
-            <small>Administradora</small>
-          </div>
-        </div>
+    <main>
+      <header>
+        <h3>Painel Administrativo</h3>
+        <span>Maria 👩🏻</span>
       </header>
 
-      <section class="page-content">
-        <RouterView />
-      </section>
+      <RouterView />
     </main>
   </div>
 </template>
@@ -77,8 +42,8 @@ import Login from './components/login.vue';
 
 body {
   font-family: Arial, sans-serif;
-  background: #f8f7fb;
-  color: #292536;
+  background: #f7f5fa;
+  color: #302544;
 }
 
 .layout {
@@ -87,151 +52,60 @@ body {
 }
 
 .sidebar {
-  width: 245px;
+  width: 220px;
   background: #302544;
   color: white;
-  padding: 28px 18px;
-  display: flex;
-  flex-direction: column;
+  padding: 25px 15px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 45px;
-}
-
-.logo h2 {
-  font-size: 21px;
-}
-
-.logo-icon {
-  font-size: 27px;
-}
-
-.menu-title {
-  color: #b7abc9;
-  font-size: 11px;
-  margin: 0 0 15px 10px;
+.sidebar h2 {
+  margin-bottom: 35px;
 }
 
 nav {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
   gap: 12px;
-  padding: 13px;
-  border-radius: 9px;
-  text-decoration: none;
-  color: #e4ddec;
-  transition: 0.2s;
 }
 
-.menu-item:hover,
-.menu-item.router-link-active {
-  background: #7655a5;
+nav a {
   color: white;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 7px;
 }
 
-.sidebar-footer {
-  margin-top: auto;
-  padding: 15px 5px;
-  border-top: 1px solid #514365;
+nav a:hover,
+nav a.router-link-active {
+  background: #7655a5;
 }
 
-.sidebar-footer small {
-  color: #b7abc9;
-}
-
-.main-content {
+main {
   flex: 1;
   min-width: 0;
 }
 
-.topbar {
-  height: 85px;
+header {
   background: white;
-  border-bottom: 1px solid #eeeaf2;
-  padding: 15px 35px;
+  padding: 25px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 
-.topbar h3 {
-  font-size: 19px;
-}
-
-.topbar p {
-  color: #888;
-  font-size: 13px;
-  margin-top: 5px;
-}
-
-.user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.user > span {
-  background: #f0e9f8;
-  padding: 10px;
-  border-radius: 50%;
-}
-
-.user div {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.user small {
-  color: #888;
-}
-
-.page-content {
-  padding: 30px 35px;
-}
-
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .sidebar {
-    width: 75px;
-    padding: 20px 8px;
+    width: 140px;
+    padding: 15px 8px;
   }
 
-  .logo h2,
-  .menu-title,
-  .menu-item:not(span),
-  .sidebar-footer {
-    font-size: 0;
+  .sidebar h2 {
+    font-size: 16px;
   }
 
-  .logo {
-    justify-content: center;
-  }
-
-  .menu-item {
-    justify-content: center;
-    font-size: 0;
-  }
-
-  .menu-item span {
-    font-size: 20px;
-  }
-
-  .topbar {
-    padding: 15px;
-  }
-
-  .page-content {
-    padding: 20px 12px;
+  header {
+    padding: 18px 10px;
+    font-size: 12px;
   }
 }
 </style>
