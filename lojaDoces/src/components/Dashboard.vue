@@ -11,7 +11,7 @@ const lucro = faturamento - despesasFixas - custoProdutos
     <div class="welcome">
       <div>
         <h1>Olá, Maria! 👋</h1>
-        <p>Aqui está o resumo financeiro da sua loja.</p>
+        <p>Gastos da loja</p>
       </div>
     </div>
 
