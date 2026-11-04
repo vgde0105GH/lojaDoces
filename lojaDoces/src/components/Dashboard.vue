@@ -1,9 +1,18 @@
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const faturamento = 0
 const despesasFixas = 440
 const custoProdutos = 0
 const lucro = faturamento - despesasFixas - custoProdutos
+
+function sair() {
+  localStorage.removeItem('loja-doces-logado')
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -13,6 +22,10 @@ const lucro = faturamento - despesasFixas - custoProdutos
         <h1>Olá, Maria! 👋</h1>
         <p>Gastos da loja</p>
       </div>
+
+      <button class="logout-button" @click="sair">
+        Sair
+      </button>
     </div>
 
     <div class="cards">
@@ -81,6 +94,9 @@ const lucro = faturamento - despesasFixas - custoProdutos
 }
 
 .welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 28px;
 }
 
@@ -93,6 +109,19 @@ const lucro = faturamento - despesasFixas - custoProdutos
 .section > p {
   color: #888;
   font-size: 14px;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  background: #df66df;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #c44bc4;
 }
 
 .cards {
