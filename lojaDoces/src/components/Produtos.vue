@@ -75,6 +75,22 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <RouterLink
+  to="/"
+  style="
+    display: inline-block;
+    background: #7655a5;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  "
+>
+  ← Voltar
+</RouterLink>
 </template>
 
 <style scoped>
@@ -112,3 +128,4 @@ button {
 .item p { color: #888; font-size: 13px; margin-top: 6px; }
 .excluir { background: #d9534f; }
 </style>
+

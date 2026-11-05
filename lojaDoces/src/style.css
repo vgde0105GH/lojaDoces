@@ -1,0 +1,57 @@
+.cadastros {
+  position: static;
+  width: 100%;
+  margin-top: 25px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e5e1ed;
+  border-radius: 10px;
+}
+
+.cadastros h2 {
+  color: #302544;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.cadastros p {
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.botoes a {
+  background: #7655a5;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 7px;
+  text-decoration: none;
+}
+
+.botoes a:hover {
+  background: #593b85;
+}
+
+.btn-voltar {
+  display: inline-block;
+  background-color: #e040fb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: background 0.2s;
+}
+
+.btn-voltar:hover {
+  background-color: #d500f9;
+}
