@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
@@ -55,10 +54,22 @@ onMounted(() => {
     <h1>Produtos</h1>
     <p>Cadastre os doces da loja.</p>
 
-    <form @submit.prevent="cadastrar">
-      <input v-model="nome" placeholder="Nome do produto" required />
-      <input v-model.number="preco" type="number" step="0.01" min="0.01" placeholder="Preço de venda" required />
-      <input v-model.number="custo" type="number" step="0.01" min="0" placeholder="Custo de produção" required />
+    <form @submit.prevent="cadastrar" class="form-compacto">
+      <div class="campo">
+        <label>Nome do produto</label>
+        <input v-model="nome" placeholder="Ex: Brigadeiro" required />
+      </div>
+
+      <div class="campo">
+        <label>Preço de venda (R$)</label>
+        <input v-model.number="preco" type="number" step="0.01" min="0.01" required />
+      </div>
+
+      <div class="campo">
+        <label>Custo de produção (R$)</label>
+        <input v-model.number="custo" type="number" step="0.01" min="0" required />
+      </div>
+
       <button>Cadastrar produto</button>
     </form>
 
@@ -74,42 +85,51 @@ onMounted(() => {
         <button class="excluir" @click="excluir(p.id)">Excluir</button>
       </div>
     </div>
+
+    <RouterLink to="/" class="btn-voltar">
+      ← Voltar
+    </RouterLink>
   </div>
-  <RouterLink
-  to="/"
-  style="
-    display: inline-block;
-    background: #7655a5;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 18px;
-  "
->
-  ← Voltar
-</RouterLink>
 </template>
 
 <style scoped>
-.pagina { padding: 30px; }
+.pagina { padding: 30px; max-width: 800px; margin: 0 auto; }
 .pagina > p { color: #888; margin: 10px 0 25px; }
-form, .lista {
+
+.form-compacto, .lista {
   background: white;
-  padding: 22px;
+  padding: 25px;
   border-radius: 12px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
+
+.campo {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
 input {
   display: block;
   width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 7px;
+  font-size: 14px;
 }
+
+input:focus {
+  border-color: #7655a5;
+  outline: none;
+}
+
 button {
   background: #7655a5;
   color: white;
@@ -117,7 +137,13 @@ button {
   padding: 11px 16px;
   border-radius: 7px;
   cursor: pointer;
+  font-weight: 600;
 }
+
+button:hover {
+  background: #593b85;
+}
+
 .item {
   display: flex;
   justify-content: space-between;
@@ -127,5 +153,17 @@ button {
 }
 .item p { color: #888; font-size: 13px; margin-top: 6px; }
 .excluir { background: #d9534f; }
-</style>
+.excluir:hover { background: #c9302c; }
 
+.btn-voltar {
+  display: inline-block;
+  background: #7655a5;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+</style>

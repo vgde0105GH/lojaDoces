@@ -1,4 +1,3 @@
-
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Dashboard from '../components/Dashboard.vue'
@@ -7,12 +6,10 @@ import Vendas from '../components/Vendas.vue'
 import Despesas from '../components/Despesas.vue'
 import Relatorios from '../components/Relatorios.vue'
 import Login from '../components/login.vue'
-import Register from '../components/register.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: Login },
-  { path: '/register', component: Register },
   { path: '/dashboard', component: Dashboard },
   { path: '/produtos', component: Produtos },
   { path: '/vendas', component: Vendas },
@@ -28,7 +25,8 @@ const router = createRouter({
 router.beforeEach((to) => {
   const usuarioLogado = localStorage.getItem('loja-doces-logado')
 
-  const paginasPublicas = ['/login', '/register']
+  // Apenas '/login' continua sendo página pública
+  const paginasPublicas = ['/login']
 
   if (!usuarioLogado && !paginasPublicas.includes(to.path)) {
     return '/login'

@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -9,24 +8,25 @@ const email = ref('')
 const senha = ref('')
 
 function fazerLogin() {
-    const dadosSalvos = localStorage.getItem('loja-doces-usuario')
+    // Limpa espaços vazios antes e depois do e-mail digitado e converte para minúsculas
+    const emailDigitado = email.value.trim().toLowerCase()
+    const senhaDigitada = senha.value.trim()
 
-    if (!dadosSalvos) {
-        alert('Nenhuma conta cadastrada. Crie uma conta primeiro.')
-        return
-    }
+    const emailPadrao = 'mariadoceria@email.com'
+    const senhaPadrao = 'docesMaria'
 
-    const usuario = JSON.parse(dadosSalvos)
+    if (emailDigitado === emailPadrao && senhaDigitada === senhaPadrao) {
+        // Salva os dados da usuária padrão para o Dashboard exibir "Maria"
+        const dadosUsuario = {
+            usuario: { nome: 'Maria' }
+        }
+        localStorage.setItem('loja-doces-usuario', JSON.stringify(dadosUsuario))
 
-    if (
-        email.value.trim().toLowerCase() === usuario.email &&
-        senha.value === usuario.senha
-    ) {
-        alert('Login realizado com sucesso!')
         localStorage.setItem('loja-doces-logado', 'true')
+        alert('Login realizado com sucesso!')
         router.push('/dashboard')
     } else {
-        alert('E-mail ou senha incorretos.')
+        alert('E-mail ou senha incorretos! Por favor, utilize: mariaDoceria@email.com / docesMaria')
     }
 }
 </script>
@@ -61,10 +61,6 @@ function fazerLogin() {
                 </p>
 
                 <button type="submit">Login</button>
-
-                <RouterLink to="/register">
-                    Não possui uma conta? Cadastre-se
-                </RouterLink>
             </div>
         </div>
     </form>
@@ -117,6 +113,7 @@ form {
 
 .login-box label {
     font-size: 14px;
+    font-weight: 600;
 }
 
 .login-box input {
@@ -139,17 +136,10 @@ form {
     border-radius: 6px;
     font-size: 16px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .login-box button:hover {
     background-color: #c44bc4;
-}
-
-.login-box a {
-    margin-top: 18px;
-    text-align: center;
-    color: #c44bc4;
-    font-size: 13px;
-    text-decoration: none;
 }
 </style>

@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -7,41 +6,29 @@ const router = useRouter()
 
 const nomeUsuario = ref('Maria')
 
-const produto = ref({
-  nome: 'Cupcake',
-  precoVenda: 8,
-  custoProducao: 4.5
-})
-
-const despesasFixas = ref({
-  internet: 120,
-  luz: 230,
-  agua: 90
-})
-
+const produtos = ref<any[]>([])
 const vendas = ref<any[]>([])
+const despesas = ref<any[]>([])
+
+// Pega o último produto cadastrado ou o primeiro da lista para exibir no destaque
+const produtoDestaque = computed(() => {
+  if (produtos.value.length > 0) {
+    return produtos.value[produtos.value.length - 1] // Mostra o último cadastrado
+  }
+  return { nome: 'Nenhum produto cadastrado', preco: 0, custo: 0 }
+})
 
 onMounted(() => {
   const usuario = localStorage.getItem('loja-doces-usuario')
-
   if (usuario) {
     const dados = JSON.parse(usuario)
     nomeUsuario.value = dados.usuario?.nome?.split(' ')[0] || 'Maria'
-    produto.value = dados.loja?.produto || produto.value
-    despesasFixas.value = dados.loja?.despesasFixas || despesasFixas.value
   }
 
-  const historico = localStorage.getItem('loja-doces-vendas')
-
-  if (historico) {
-    vendas.value = JSON.parse(historico)
-  } else {
-    vendas.value = [
-      { produto: 'Cupcake', quantidade: 10, valorTotal: 80 },
-      { produto: 'Cupcake', quantidade: 5, valorTotal: 40 }
-    ]
-    localStorage.setItem('loja-doces-vendas', JSON.stringify(vendas.value))
-  }
+  // Carrega as listas reais salvas no localStorage de cada tela
+  produtos.value = JSON.parse(localStorage.getItem('produtos') || '[]')
+  vendas.value = JSON.parse(localStorage.getItem('vendas') || '[]')
+  despesas.value = JSON.parse(localStorage.getItem('despesas') || '[]')
 })
 
 const vendasRealizadas = computed(() =>
@@ -49,17 +36,19 @@ const vendasRealizadas = computed(() =>
 )
 
 const faturamento = computed(() =>
-  vendas.value.reduce((total, venda) => total + (venda.valorTotal || 0), 0)
+  vendas.value.reduce((total, venda) => total + (venda.total || 0), 0)
+)
+
+const custoTotalVendas = computed(() =>
+  vendas.value.reduce((total, venda) => total + (venda.custoTotal || 0), 0)
 )
 
 const totalDespesas = computed(() =>
-  despesasFixas.value.internet +
-  despesasFixas.value.luz +
-  despesasFixas.value.agua
+  despesas.value.reduce((total, desp) => total + (desp.valor || 0), 0)
 )
 
 const lucroResultado = computed(() =>
-  faturamento.value - totalDespesas.value
+  faturamento.value - custoTotalVendas.value - totalDespesas.value
 )
 
 function formatarMoeda(valor: number) {
@@ -97,7 +86,7 @@ function logout() {
           💸
           <p>Despesas</p>
           <h2>R$ {{ formatarMoeda(totalDespesas) }}</h2>
-          <small>Despesas fixas</small>
+          <small>Gastos cadastrados</small>
         </div>
 
         <div class="card">
@@ -117,28 +106,27 @@ function logout() {
         </div>
       </section>
 
-      <!-- Informações da loja -->
+      <!-- Informações da loja (Agora puxa o produto cadastrado dinamicamente) -->
       <section class="informacoes">
         <h2>Informações da loja</h2>
-        <p class="subtitulo">Dados iniciais cadastrados para {{ nomeUsuario }}.</p>
+        <p class="subtitulo">Dados e produtos cadastrados para {{ nomeUsuario }}.</p>
 
         <div class="grid-detalhes">
           <div class="card-detalhe">
-            <h3>🧁 {{ produto.nome }}</h3>
-            <p>Preço de venda: R$ {{ formatarMoeda(produto.precoVenda) }}</p>
-            <p>Custo de produção: R$ {{ formatarMoeda(produto.custoProducao) }}</p>
+            <h3>🧁 {{ produtoDestaque.nome }}</h3>
+            <p>Preço de venda: R$ {{ formatarMoeda(produtoDestaque.preco) }}</p>
+            <p>Custo de produção: R$ {{ formatarMoeda(produtoDestaque.custo) }}</p>
           </div>
 
           <div class="card-detalhe">
-            <h3>🏠 Despesas fixas mensais</h3>
-            <p>Internet: R$ {{ formatarMoeda(despesasFixas.internet) }}</p>
-            <p>Luz: R$ {{ formatarMoeda(despesasFixas.luz) }}</p>
-            <p>Água: R$ {{ formatarMoeda(despesasFixas.agua) }}</p>
+            <h3>🏠 Total de Despesas Registradas</h3>
+            <p>Quantidade de itens: {{ despesas.length }} despesa(s)</p>
+            <p>Valor total: R$ {{ formatarMoeda(totalDespesas) }}</p>
           </div>
         </div>
       </section>
 
-      <!-- CADASTROS: fica dentro do Dashboard -->
+      <!-- Cadastros -->
       <section class="cadastros">
         <h2>Cadastros da loja</h2>
         <p class="subtitulo">Escolha o que deseja cadastrar:</p>
@@ -147,9 +135,6 @@ function logout() {
           <RouterLink to="/produtos">+ Cadastrar Produto</RouterLink>
           <RouterLink to="/vendas">+ Registrar Venda</RouterLink>
           <RouterLink to="/despesas">+ Cadastrar Despesa</RouterLink>
-          <RouterLink to="/register">
-  + Cadastrar Usuário
-</RouterLink>
         </div>
       </section>
 
@@ -283,6 +268,7 @@ function logout() {
   padding: 12px 18px;
   border-radius: 7px;
   text-decoration: none;
+  font-weight: 600;
 }
 
 .botoes a:hover {
